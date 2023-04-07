@@ -1,7 +1,7 @@
 # Projeto e Dimensionamento para Tratamento de Água
 Design Water Treatment
 
-Descrição: Projeto e dimensionamento de subsistemas de tratamento de água
+Descrição: Projeto, dimensionamento e memoriais de subsistemas de tratamento de água
 
 ## Pré-tratamento
 ### Gradeamento
