@@ -29,3 +29,6 @@ Constante k: 0.081
 Perda de carga: 0.012 m
 ##################################################
 ```
+
+<img src="https://github.com/thiagopassos2001/design-water-treatment/blob/main/Modelo%20de%20Memorial/Pr%C3%A9-tratamento/Gradeamento/Imagem%20Gradeamento%20Gen%C3%A9rico.jpg"  width="80%" height="40%">
+
