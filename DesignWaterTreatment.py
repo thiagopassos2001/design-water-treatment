@@ -88,7 +88,7 @@ def DesignBarScreens(
         print(f'Velocidade no gradeamento (máxima de {v_bs_max} cm/s): {round(v_bs,3)} cm/s')
         
         print('GRADEAMENTO'.center(50,'-'))
-        print(f'Número de barras de {s*100} cm: {n}')
+        print(f'Número de barras de {s*100} cm: {n_real}')
         print(f'Espaçamento livre entre barras: {b*100} cm')
         print(f'Altura do Canal: {round(H,3)} m')
         print(f'Comprimento da Grade: {round(L,3)} m')
@@ -121,49 +121,47 @@ def DesignBarScreens(
     
     return report
 
-def DesignSandSedimentationTank():
-    # Constantes - SI
-    g = 9.81
-    v0 = 0.3
-    vs = 0.021
+def DesignSandSedimentationTank(
+    Q,
+    L_max,
+    hs_max,
+    b_max,
+    b_min=0.5,
+    FS=1.5,
+    v0=0.3,
+    vs=0.021,
+    g=9.81,
+    logs=False
+    ):
+    '''
+    Dimensionar a caixa de areia conforme a NBR 12213/92
 
-    # Verificar Caixa de Areia
-    # Entradas com unidades usuais
-    # Vazão de entrada - L/s
-    Q = 20
-    # Comprimento do Canal - m
-    L = 6
-    # Largura do Canal - m
-    b = 1
-    # Altura de Sedimentção - m
-    hs = 0.3
+    Material de consulta para entender o processo:
+    https://youtu.be/EXp6VKKdlgo
+
+    v0 = velocidade de escoamento longitudinal - m/s
+    vs = velocidade de sedimentação - m/s
+    g = aceleração da gravidade - m/s²
+    '''
 
     # Processamento
     # Conversão de unidades para o SI
     Q = Q*1e-3
 
-    # Verificar Comprimento Mínimo
-    if L >= (v0/vs)*hs:
-        CML = True
-        FS = L/((v0/vs)*hs)
-    else:
-        CML = False
-        FS = L/((v0/vs)*hs)
+    #################################
+    # Área superficial
+    As = Q/vs
+    # Área transversal
+    At = Q/v0
 
-    # Verificar Largura Mínima
-    if b >= 0.5:
-        CMW = True
-    else:
-        CMW = False
-    LWf = L/b
+    print('b,hs,L,True/False,L/b,P')
+    for b in np.arange(b_min,b_max+0.1,0.1):
+        L = As/b
+        L = L*FS
 
-    # Saída
-    print('RESULTADOS'.center(50,'#'))
-    print('VERIFICAÇÃO DO COMPRIMENTO MÍNIMO'.center(50,'-'))
-    print(f'Comprimento do Canal: {L} m')
-    print(f'Altura de Sedimentção: {hs} m')
-    print(f'FS = {round(FS,2)}')
-    print('VERIFICAÇÃO DA LARGURA MÍNIMA'.center(50,'-'))
-    print(f'Largura do Canal: {b} m')
-    print(f'Fator Comprimento/Largura: {round(LWf,2)}')
-    print(''.center(50,'#'))
+        hs = At/b
+
+        L_b = b/hs
+        P = 2*hs + b
+
+        print(b,hs,L,True if (hs<=hs_max) and (L<=L_max) else False,L_b,P)
